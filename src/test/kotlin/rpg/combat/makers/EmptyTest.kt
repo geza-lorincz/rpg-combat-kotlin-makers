@@ -8,13 +8,21 @@ class EmptyTest {
     fun createCharacter(): Character = Character()
 
     @Test
-    fun `empty test`() {
-        assertDoesNotThrow { Empty().doNothing() }
+    fun `can create a character with a name`() {
+        assertDoesNotThrow {
+            val character = createCharacter("test")
+        }
+
+        assertEquals("test", character.name)
     }
 
     @Test
-    fun `can create a character`() {
-        assertDoesNotThrow { createCharacter() }
+    fun `can retrieve all characters`() {
+        createCharacter("test")
+        createCharacter("test2")
+        val characters = getAllCharacters()
+
+        assertEquals(2, characters.size)
     }
 
     @Test
@@ -42,7 +50,7 @@ class EmptyTest {
     fun`character's health decreases by damage amount when damaged`() {
         val character = createCharacter()
 
-        character.damage(100)
+        character.takeDamage(100)
 
         assertEquals(900, character.health)
     }
@@ -51,7 +59,7 @@ class EmptyTest {
     fun `character dies when health reaches a value of 0`() {
         val character = createCharacter()
 
-        character.damage(1000)
+        character.takeDamage(1000)
 
         assertEquals(false, character.alive)
     }
@@ -60,8 +68,8 @@ class EmptyTest {
     fun `character's health increases by healed amount when healed`() {
         val character = createCharacter()
 
-        character.damage(100)
-        character.heal(50)
+        character.takeDamage(100)
+        character.takeHeal(50)
 
         assertEquals(950, character.health)
     }
@@ -70,7 +78,7 @@ class EmptyTest {
     fun `character's health does not increase further when it reaches 1000`() {
         val character = createCharacter()
 
-        character.heal(100)
+        character.takeHeal(100)
 
         assertEquals(1000, character.health)
     }
@@ -79,9 +87,31 @@ class EmptyTest {
     fun `dead character's health does not change when healed`() {
         val character = createCharacter()
 
-        character.damage(1000)
-        character.heal(100)
+        character.takeDamage(1000)
+        character.takeHeal(100)
 
         assertEquals(0, character.health)
     }
+
+    @Test
+    fun `character can deal damage to another character`() {
+        val character1 = createCharacter("test")
+        val character2 = createCharacter("test2")
+
+        character1.dealDamage(100, "test2")
+
+        assertEquals(900, character2.health)
+    }
+
+    @Test
+    fun `character can heal  another character`() {
+        val character1 = createCharacter("test")
+        val character2 = createCharacter("test2")
+
+        character1.dealDamage(100, "test2")
+        character1.dealHeal(50, "test2")
+
+        assertEquals(950, character2.health)
+    }
+
 }
