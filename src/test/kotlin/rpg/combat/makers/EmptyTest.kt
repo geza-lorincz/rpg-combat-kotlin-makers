@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 
 class EmptyTest {
+    fun createCharacter(): Character = Character()
+
     @Test
     fun `empty test`() {
         assertDoesNotThrow { Empty().doNothing() }
