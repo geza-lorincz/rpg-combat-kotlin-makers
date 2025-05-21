@@ -5,12 +5,19 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 
 class EmptyTest {
-    fun createCharacter(): Character = Character()
+    val characterList = mutableListOf<Character>()
+    fun createCharacter(name: String = "test"): Character {
+        val character = Character(name)
+        characterList.add(character)
+        return character
+    }
+
+    fun getAllCharacters(): List<Character> = characterList.toList()
 
     @Test
     fun `can create a character with a name`() {
-        assertDoesNotThrow {
-            val character = createCharacter("test")
+        val character = assertDoesNotThrow {
+            createCharacter("test")
         }
 
         assertEquals("test", character.name)
@@ -98,7 +105,7 @@ class EmptyTest {
         val character1 = createCharacter("test")
         val character2 = createCharacter("test2")
 
-        character1.dealDamage(100, "test2")
+        character1.dealDamage(100, character2)
 
         assertEquals(900, character2.health)
     }
@@ -108,8 +115,8 @@ class EmptyTest {
         val character1 = createCharacter("test")
         val character2 = createCharacter("test2")
 
-        character1.dealDamage(100, "test2")
-        character1.dealHeal(50, "test2")
+        character1.dealDamage(100, character2)
+        character1.dealHeal(50, character2)
 
         assertEquals(950, character2.health)
     }
